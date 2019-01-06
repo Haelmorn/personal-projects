@@ -22,4 +22,3 @@ for k, v in textd.items():
 #find and print the highest GC percentage alongside with its key
 maximum = max(a, key=a.get)
 print(maximum,"\n",a[maximum]*100)
-REPLACING GIT TEST MESSAGE WITH ANOTHER TEST MESSAGE
