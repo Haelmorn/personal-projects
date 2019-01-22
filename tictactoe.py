@@ -1,6 +1,5 @@
 import random
 import time
-player = 0
 
 ##Pretty self-explanatory. Prints out the playing field to the terminal
 def show_board():
@@ -30,6 +29,8 @@ def move_player(player, used):
 
 #Takes coordinates argument (coming from player_move() or aimove() function)
 # and parses it to form a target for mark() function
+# TODO: shorten this? Probably using a dict 
+# (loop through keys (coordinates) and return value (coords))
 def parse_move(coordinates):
     if coordinates[0] == "A" and coordinates[1] == "1":
         coords = 0
@@ -52,13 +53,14 @@ def parse_move(coordinates):
     return coords   
 
 ##Marks x spot on arena playing field with either X or O, depending on current player
-def mark(x, arena):
+def mark(x, arena, player):
     if player == 1:
         arena[x] = "X"
     elif player == 2:
         arena[x] = "O"
 
 ##Checks the field for possible winning combinations
+# TODO: Again, shorten this
 def wincond(arena):
     if arena[0] == arena[1] == arena[2] and arena [0] != " ":
         return True
@@ -100,25 +102,72 @@ def gamemode():
         elif mode != 1 and mode != 2:
             print("Please, choose a proper game mode (1 or 2)")
             continue
-##Pseudo-ai code, returns a move (same as player_move()), but first checks if any move can win it the game. If not, returns a random free spot
+
+# Pseudo-ai code, returns a move (same as player_move()), but first checks if any move can win it the game. 
+# Then, chooses the middle spot if its free. 
+# If not, returns a random free spot
+# TODO: Add a check for possible player win in their next turn (after checking for win possibility)
+# TODO: Make this function better organised and readable
+# TODO: Take a random corner if middle is taken
 def aimove():
     open = []
     for m in movelist:
         if m not in moves:
             open.append(m)
-    choice = random.choice(open)
+    if next_turn_win(open, field) is not False:
+        choice = next_turn_win(open, field)
+    elif "B2" in open:
+        choice = "B2"
+    else:
+        choice = random.choice(open)
     moves.append(choice)
     return choice
 
-
-
-
+def next_turn_win(moveset, arena):
+    for m in range(0, 9):
+        tempfield = arena.copy()
+        if tempfield[m] == " ":
+            mark(m, tempfield, 2)
+            if wincond(tempfield) is True:
+                a = reparse(m)
+                return a
+    return False
+    
+#TODO: change this the same way as parse_move(), just reverse the key-val
+def reparse(move):
+    if move == 0:
+        a = "A1"
+        return a
+    elif move == 1:
+        a = "B1"
+        return a
+    elif move == 2:
+        a = "C1"
+        return a    
+    elif move == 3:
+        a = "A2"
+        return a
+    elif move == 4:
+        a = "B2"
+        return a 
+    elif move == 5:
+        a = "C2"
+        return a
+    elif move == 6:
+        a = "A3"
+        return a
+    elif move == 7:
+        a = "B3"
+        return a
+    elif move == 8:
+        a = "C3"
+        return a
 
 moves = []
 field = [" ", " ", " "," ", " ", " "," ", " ", " "]
 movelist = ("A1", "A2", "A3", "B1", "B2", "B3", "C1", "C2", "C3")
 
-
+#TODO: Take common parts from both modes and somehow concantenate this function to make it shorter
 def game_loop():
     global player
     gmod = gamemode()
@@ -131,7 +180,7 @@ def game_loop():
             show_board()
             move = move_player(player, moves)
             coords = parse_move(move)
-            mark(coords, field)
+            mark(coords, field, player)
             if wincond(field):
                 show_board()
                 print(f"Congratulations! Player {player} wins!")
@@ -158,7 +207,7 @@ def game_loop():
                 coords = parse_move(aimove())
             elif player == 1 or player == 0:
                 coords = parse_move(move_player(player, moves))
-            mark(coords, field)
+            mark(coords, field, player)
             show_board()
             if wincond(field):
                 show_board()
