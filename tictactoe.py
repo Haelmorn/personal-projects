@@ -1,6 +1,8 @@
-from random import randint
+import random
+import time
 player = 0
 
+##Pretty self-explanatory. Prints out the playing field to the terminal
 def show_board():
     print("A", " ", "B", " ", "C",)
     print(field[0], "|", field[1], "|", field[2], "1")
@@ -9,6 +11,7 @@ def show_board():
     print("-", "-", "-", "-", "-")
     print(field[6], "|", field[7], "|", field[8], "3")
 
+##Takes input from the player, checks if 1) input is quit 2)the move is allowed and the spot is free 3)the spot is taken 4)move is allowed (ie. is a proper place on the board)
 def move_player(player, used):
     while True:
         print(f"Please, enter the coordinates for player {player}: ")
@@ -24,7 +27,9 @@ def move_player(player, used):
         elif move not in movelist:
             print("Sorry, wrong input. Please enter the coordinates in (X, Y) format, for ex. 'A1'")
             continue
-       
+
+#Takes coordinates argument (coming from player_move() or aimove() function)
+# and parses it to form a target for mark() function
 def parse_move(coordinates):
     if coordinates[0] == "A" and coordinates[1] == "1":
         coords = 0
@@ -46,13 +51,14 @@ def parse_move(coordinates):
         coords = 8
     return coords   
 
-def mark(xy, arena):
-    global field
+##Marks x spot on arena playing field with either X or O, depending on current player
+def mark(x, arena):
     if player == 1:
-        arena[xy] = "X"
+        arena[x] = "X"
     elif player == 2:
-        arena[xy] = "O"
+        arena[x] = "O"
 
+##Checks the field for possible winning combinations
 def wincond(arena):
     if arena[0] == arena[1] == arena[2] and arena [0] != " ":
         return True
@@ -73,12 +79,14 @@ def wincond(arena):
     else:
         return False
 
+##Clears the field and used moves to get a fresh game
 def restart():
     global moves
     global field
     moves = []
     field = [" ", " ", " "," ", " ", " "," ", " ", " "]
 
+##Allows player to choose a gamemode (1 for pvp and 2 for pve)
 def gamemode():
     while True:
         print("Choose game mode")
@@ -92,25 +100,16 @@ def gamemode():
         elif mode != 1 and mode != 2:
             print("Please, choose a proper game mode (1 or 2)")
             continue
-
+##Pseudo-ai code, returns a move (same as player_move()), but first checks if any move can win it the game. If not, returns a random free spot
 def aimove():
-    tempfield = field
-    try:
-        for i in range(0, len(tempfield)):
-            mark(i, tempfield)
-            if wincond(tempfield) == True:
-                return i
-            else:
-                tempfield = field
-    except ValueError:
-        pass
-    else:
-        while True:
-            move = randint(0, 8)
-            if field[move] == " ":
-                return i
-            elif field[move] != " ":
-                pass
+    open = []
+    for m in movelist:
+        if m not in moves:
+            open.append(m)
+    choice = random.choice(open)
+    moves.append(choice)
+    return choice
+
 
 
 
@@ -150,20 +149,23 @@ def game_loop():
                 else:
                     break
     elif gmod == 2:
+        show_board()
         player = 1
         while True:
-            show_board()
             if player == 2:
-                player = 1
-                coords = aimove()
-            elif player == 1:
+                print("Computer's turn")
+                time.sleep(1)
+                coords = parse_move(aimove())
+            elif player == 1 or player == 0:
                 coords = parse_move(move_player(player, moves))
-                player = 2
             mark(coords, field)
-
+            show_board()
             if wincond(field):
                 show_board()
-                print(f"Congratulations! Player {player} wins!")
+                if player == 1:
+                    print(f"Congratulations! You win!")
+                elif player == 2:
+                    print("The computer wins!")
                 print("Play again? (y/n)")
                 if input("> ") == "y":
                     restart()
@@ -177,9 +179,12 @@ def game_loop():
                     restart()
                 else:
                     break
-
-aimove()
-
-
+            if player == 1:
+                player = 2
+            elif player == 2:
+                player = 1
+                    
+            
+            
 if __name__ == "__main__":
     game_loop()
