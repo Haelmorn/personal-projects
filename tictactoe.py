@@ -1,6 +1,32 @@
 import random
 import time
 
+moves = []
+coord_dict = {
+    "A1": 0,
+    "B1": 1,
+    "C1": 2,
+    "A2": 3,
+    "B2": 4,
+    "C2": 5,
+    "A3": 6,
+    "B3": 7,
+    "C3": 8,
+}
+reparse_dict = {
+    0: "A1",
+    1: "B1",
+    2: "C1",
+    3: "A2",
+    4: "B2",
+    5: "C2",
+    6: "A3",
+    7: "B3",
+    8: "C3",
+}
+field = [" ", " ", " "," ", " ", " "," ", " ", " "]
+movelist = ("A1", "A2", "A3", "B1", "B2", "B3", "C1", "C2", "C3")
+
 ##Pretty self-explanatory. Prints out the playing field to the terminal
 def show_board():
     print("A", " ", "B", " ", "C",)
@@ -27,30 +53,46 @@ def move_player(player, used):
             print("Sorry, wrong input. Please enter the coordinates in (X, Y) format, for ex. 'A1'")
             continue
 
+# Pseudo-ai code, returns a move (same as player_move()), but first checks if any move can win it the game. 
+# Then, chooses the middle spot if its free. 
+# If not, returns a random free spot
+# TODO: Add a check for possible player win in their next turn (after checking for win possibility)
+# TODO: Make this function better organised and readable
+# TODO: Take a random corner if middle is taken
+def aimove():
+    open = []
+    for m in movelist:
+        if m not in moves:
+            open.append(m)
+    if next_turn_win(open, field) is not False:
+        choice = next_turn_win(open, field)
+    elif "B2" in open:
+        choice = "B2"
+    else:
+        choice = random.choice(open)
+    moves.append(choice)
+    return choice
+
+def next_turn_win(moveset, arena):
+    for m in range(0, 9):
+        tempfield = arena.copy()
+        if tempfield[m] == " ":
+            mark(m, tempfield, 2)
+            if wincond(tempfield) is True:
+                a = reparse(m)
+                return a
+    return False
+    
+def reparse(move):
+    if move in reparse_dict.keys():
+        return reparse_dict[move]
+
+
 #Takes coordinates argument (coming from player_move() or aimove() function)
 # and parses it to form a target for mark() function
-# TODO: shorten this? Probably using a dict 
-# (loop through keys (coordinates) and return value (coords))
 def parse_move(coordinates):
-    if coordinates[0] == "A" and coordinates[1] == "1":
-        coords = 0
-    elif coordinates[0] == "B" and coordinates[1] == "1":
-        coords = 1
-    elif coordinates[0] == "C" and coordinates[1] == "1":
-        coords = 2
-    elif coordinates[0] == "A" and coordinates[1] == "2":
-        coords = 3
-    elif coordinates[0] == "B" and coordinates[1] == "2":
-        coords = 4
-    elif coordinates[0] == "C" and coordinates[1] == "2":
-        coords = 5
-    elif coordinates[0] == "A" and coordinates[1] == "3":
-        coords = 6
-    elif coordinates[0] == "B" and coordinates[1] == "3":
-        coords = 7
-    elif coordinates[0] == "C" and coordinates[1] == "3":
-        coords = 8
-    return coords   
+    if coordinates in coord_dict:
+        return coord_dict[coordinates]
 
 ##Marks x spot on arena playing field with either X or O, depending on current player
 def mark(x, arena, player):
@@ -103,69 +145,6 @@ def gamemode():
             print("Please, choose a proper game mode (1 or 2)")
             continue
 
-# Pseudo-ai code, returns a move (same as player_move()), but first checks if any move can win it the game. 
-# Then, chooses the middle spot if its free. 
-# If not, returns a random free spot
-# TODO: Add a check for possible player win in their next turn (after checking for win possibility)
-# TODO: Make this function better organised and readable
-# TODO: Take a random corner if middle is taken
-def aimove():
-    open = []
-    for m in movelist:
-        if m not in moves:
-            open.append(m)
-    if next_turn_win(open, field) is not False:
-        choice = next_turn_win(open, field)
-    elif "B2" in open:
-        choice = "B2"
-    else:
-        choice = random.choice(open)
-    moves.append(choice)
-    return choice
-
-def next_turn_win(moveset, arena):
-    for m in range(0, 9):
-        tempfield = arena.copy()
-        if tempfield[m] == " ":
-            mark(m, tempfield, 2)
-            if wincond(tempfield) is True:
-                a = reparse(m)
-                return a
-    return False
-    
-#TODO: change this the same way as parse_move(), just reverse the key-val
-def reparse(move):
-    if move == 0:
-        a = "A1"
-        return a
-    elif move == 1:
-        a = "B1"
-        return a
-    elif move == 2:
-        a = "C1"
-        return a    
-    elif move == 3:
-        a = "A2"
-        return a
-    elif move == 4:
-        a = "B2"
-        return a 
-    elif move == 5:
-        a = "C2"
-        return a
-    elif move == 6:
-        a = "A3"
-        return a
-    elif move == 7:
-        a = "B3"
-        return a
-    elif move == 8:
-        a = "C3"
-        return a
-
-moves = []
-field = [" ", " ", " "," ", " ", " "," ", " ", " "]
-movelist = ("A1", "A2", "A3", "B1", "B2", "B3", "C1", "C2", "C3")
 
 #TODO: Take common parts from both modes and somehow concantenate this function to make it shorter
 def game_loop():
