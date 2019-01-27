@@ -87,7 +87,6 @@ def reparse(move):
     if move in reparse_dict.keys():
         return reparse_dict[move]
 
-
 #Takes coordinates argument (coming from player_move() or aimove() function)
 # and parses it to form a target for mark() function
 def parse_move(coordinates):
