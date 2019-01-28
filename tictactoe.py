@@ -24,10 +24,10 @@ reparse_dict = {
     7: "B3",
     8: "C3",
 }
-field = [" ", " ", " "," ", " ", " "," ", " ", " "]
+field = [" ", " ", " ", " ", " ", " ", " ", " ", " "]
 movelist = ("A1", "A2", "A3", "B1", "B2", "B3", "C1", "C2", "C3")
 
-##Pretty self-explanatory. Prints out the playing field to the terminal
+
 def show_board():
     print("A", " ", "B", " ", "C",)
     print(field[0], "|", field[1], "|", field[2], "1")
@@ -36,8 +36,9 @@ def show_board():
     print("-", "-", "-", "-", "-")
     print(field[6], "|", field[7], "|", field[8], "3")
 
-##Takes input from the player, checks if 1) input is quit 2)the move is allowed and the spot is free 3)the spot is taken 4)move is allowed (ie. is a proper place on the board)
+
 def move_player(player, used):
+#Takes input from the player, checks if 1) input is quit 2)the move is allowed and the spot is free 3)the spot is taken 4)move is allowed (ie. is a proper place on the board)
     while True:
         print(f"Please, enter the coordinates for player {player}: ")
         move = input("> ").upper()
@@ -50,15 +51,20 @@ def move_player(player, used):
             print("This spot is taken. Please, enter another one.")
             continue
         elif move not in movelist:
-            print("Sorry, wrong input. Please enter the coordinates in (X, Y) format, for ex. 'A1'")
+            print("""Sorry, wrong input. Please enter the coordinates in (X, Y)
+            format, for ex. 'A1'""")
             continue
 
-# Pseudo-ai code, returns a move (same as player_move()), but first checks if any move can win it the game. 
-# Then, chooses the middle spot if its free. 
+# Pseudo-ai code, returns a move (same as player_move()), but first checks if
+# any move can win it the game. 
+# Then, chooses the middle spot if its free.
 # If not, returns a random free spot
-# TODO: Add a check for possible player win in their next turn (after checking for win possibility)
+# TODO: Add a check for possible player win in their next turn (after checking
+#       for win possibility)
 # TODO: Make this function better organised and readable
 # TODO: Take a random corner if middle is taken
+
+
 def aimove():
     open = []
     for m in movelist:
@@ -73,6 +79,7 @@ def aimove():
     moves.append(choice)
     return choice
 
+
 def next_turn_win(moveset, arena):
     for m in range(0, 9):
         tempfield = arena.copy()
@@ -82,18 +89,20 @@ def next_turn_win(moveset, arena):
                 a = reparse(m)
                 return a
     return False
-    
+
+
 def reparse(move):
     if move in reparse_dict.keys():
         return reparse_dict[move]
 
+
+def parse_move(coordinates):
 #Takes coordinates argument (coming from player_move() or aimove() function)
 # and parses it to form a target for mark() function
-def parse_move(coordinates):
     if coordinates in coord_dict:
         return coord_dict[coordinates]
 
-##Marks x spot on arena playing field with either X or O, depending on current player
+#Marks x spot on arena playing field with either X or O, depending on current player
 def mark(x, arena, player):
     if player == 1:
         arena[x] = "X"
