@@ -1,4 +1,4 @@
-from readros import read_rosalind as rr 
+from readros import read_rosalind as rr
 import numpy as np
 
 text = rr("test.txt")
@@ -15,35 +15,35 @@ clist = []
 glist = []
 tlist = []
 for i in range(0, len(subst)):
-    ca = subst[i].count('A')
+    ca = subst[i].count("A")
     alist.append(ca)
 for i in range(0, len(subst)):
-    ca = subst[i].count('C')
+    ca = subst[i].count("C")
     clist.append(ca)
 for i in range(0, len(subst)):
-    ca = subst[i].count('T')
+    ca = subst[i].count("T")
     tlist.append(ca)
 for i in range(0, len(subst)):
-    ca = subst[i].count('G')
+    ca = subst[i].count("G")
     glist.append(ca)
 
 for i in range(0, len(alist)):
     cslist = [alist[i], clist[i], tlist[i], glist[i]]
     if max(cslist) == alist[i]:
-        print("A", end = "")
+        print("A", end="")
     elif max(cslist) == clist[i]:
-        print("C", end = "")
+        print("C", end="")
     elif max(cslist) == tlist[i]:
-        print("T", end = "")
+        print("T", end="")
     elif max(cslist) == glist[i]:
-        print("G", end = "")
+        print("G", end="")
 print("\n")
 
-print(f"A: ", end = "")
+print(f"A: ", end="")
 print(*alist)
-print(f"C: ", end = "")
+print(f"C: ", end="")
 print(*clist)
-print(f"G: ", end = "")
+print(f"G: ", end="")
 print(*glist)
-print(f"T: ", end = "")
+print(f"T: ", end="")
 print(*tlist)
