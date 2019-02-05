@@ -46,3 +46,4 @@ vscode/
 excel.py
 *.md
 *.idea
+*.c
