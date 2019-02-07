@@ -2,7 +2,6 @@ from readros import read_rosalind as rr
 from Bio.Seq import Seq
 from Bio.Alphabet import generic_dna
 
-
 codons = list(rr("rosalind_splc.txt").values())
 DNAstring = codons[0]
 codons.pop(0)

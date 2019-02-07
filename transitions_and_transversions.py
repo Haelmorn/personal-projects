@@ -12,4 +12,4 @@ for i in range(0, len(sequences[0])):
     elif sequences[0][i] != sequences[1][i]:
         transversions += 1
 
-print('{0:.11f}'.format(transitions/transversions))
+print('{0:.11f}'.format(transitions / transversions))
