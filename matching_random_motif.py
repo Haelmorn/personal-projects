@@ -1,15 +1,17 @@
-gc = 0.6
-seq = "ATAGCCGA"
+gc = 0.558360
+seq = "AGCGTAAA"
 prob = 1
 
 
-def probfun(n, gcontent, sequence, prob):
+def probfun(gcontent, sequence, prob):
     for i in sequence:
         if i == 'A' or i == 'T':
-            prob = prob * gcontent
+            prob = (prob * (1 - gcontent))/2
         elif i == 'G' or i == 'C':
-            prob = prob * (1 - gcontent)
-    return 1 - prob
+            prob = (prob * gcontent)/2
+            
+    return prob
 
 
-print(probfun(9000, gc, seq, 1))
+ans = 1 - (1- probfun(gc, seq, 1))** 83684
+print('%0.3f' %  ans)
