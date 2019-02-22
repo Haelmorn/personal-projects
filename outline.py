@@ -4,24 +4,26 @@ import smtplib, ssl
 import os
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-
 import datetime
 
 websites = ["https://www.google.com/", "https://httpstat.us/502"]
 
 
 def main():
-    context = ssl.create_default_context()
-    port = 587
-    password = os.environ["PASSWORD_TO_EMAIL"]
-    with smtplib.SMTP("smtp.gmail.com", port) as server:
-        server.starttls(context=context)
-        server.login("ciuchcia98@gmail.com", password)
+    try:
+        context = ssl.create_default_context()
+        port = 587
+        password = os.environ["PASSWORD_TO_EMAIL"]
+        with smtplib.SMTP("smtp.gmail.com", port) as server:
+            server.starttls(context=context)
+            server.login("ciuchcia98@gmail.com", password)
 
-        for website in websites:
-            status = status_check(website)
-            msg = compose_email(website, status)
-            server.send_message(msg)
+            for website in websites:
+                status = status_check(website)
+                msg = compose_email(website, status)
+                server.send_message(msg)
+    except Exception as e:
+        write_log(e)
 
 
 def status_check(address):
@@ -38,7 +40,6 @@ def status_check(address):
 
 def compose_email(website, status, error_message=''):
     # builds message based on server response - status
-
     msg = MIMEMultipart()
     msg["From"] = "ciuchcia98@gmail.com"
     msg["To"] = "haelmorn@gmail.com"
