@@ -6,7 +6,10 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import datetime
 
-websites = ["https://www.google.com/", "https://httpstat.us/502"]
+
+#READ ME
+#All placeholder values are preceded with a '#'.  Those need to be changed for the script to work
+websites = ["#website1", "#website2"]
 
 
 def main():
@@ -16,7 +19,7 @@ def main():
         password = os.environ["PASSWORD_TO_EMAIL"]
         with smtplib.SMTP("smtp.gmail.com", port) as server:
             server.starttls(context=context)
-            server.login("ciuchcia98@gmail.com", password)
+            server.login("#sender_email", password)
 
             for website in websites:
                 status = status_check(website)
@@ -41,8 +44,8 @@ def status_check(address):
 def compose_email(website, status, error_message=''):
     # builds message based on server response - status
     msg = MIMEMultipart()
-    msg["From"] = "ciuchcia98@gmail.com"
-    msg["To"] = "haelmorn@gmail.com"
+    msg["From"] = "#sender_email"
+    msg["To"] = "#recipient_email"
     if status == True:
         msg["Subject"] = u"\u2713 STATUS OK: {}".format(website)
         write_log(f"STATUS OK: {website}")
