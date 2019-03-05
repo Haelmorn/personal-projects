@@ -10,4 +10,3 @@ def reverse_complement(sequence):
         elif sequence[i] == "G":
             rsequence.append("C")
     return "".join(rsequence[::-1])
-    
