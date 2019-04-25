@@ -1,20 +1,25 @@
-def binomialCoefficient(n, k): 
-    if (k > n - k): 
-        k = n - k 
-    res = 1
+from math import factorial
 
-    for i in range(k): 
-        res = res * (n - i) 
-        res = res // (i + 1) 
-    return res 
+matchings = [("A", "U"), ("U", "A"), ("C", "G"), ("G", "C")]
 
-def catalan(n): 
-    c = binomialCoefficient(2*n, n) 
-    return c//(n + 1) 
+def catalan(n):
+    if n == 0:
+        return 1
+    else:
+        return ((2*(2*n + 1))/(n+2)) * catalan(n-1)
 
-a = '''CGUCGUGGCUACAUAAGCUCUCGAGAUCGAGCGCUGUUAACAUACGGCCGAGUCGCGCGA
-UCGGUACGGCCGCAUACGCUCGCGCGCGACUAGCGGACAUAUGUCUCGCCGGAUAUGUGC
-ACGAGGCCGCGGCCCGUUAAAGAGAAUUAUCUAUGAUCCUAUUAUAUAUAGUACUCUGCG
-CAUGCGUAUAGCCCAUAUGAUACGUGCACGCGCGUAUUAUAAAUUUACACAAUAUUGUGC
-GUUAACCGCCGCUAGUAGAUGAGCUACGCAUGAUCUAGCGAAUACGUUGCAU'''
-print(catalan(len(a)-2))
+seq = "AUAUAUAUAUAUAUAUAU"
+suma = 0
+n = len(seq)
+m = []
+for i in range (1, n+1):
+    if (seq[0], seq[i]) in matchings:
+        m.append(i)
+
+
+for k in range(1, (n//2)+1):
+    suma = suma + (catalan(k-1) * catalan(n - k))
+
+
+#TODO: 1. Sprawdzić, gdzie można podzielić RNA na 2
+#TOOD: 2. Policzyć matchingi po podzieleniu

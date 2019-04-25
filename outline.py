@@ -30,7 +30,8 @@ def main():
 
 
 def status_check(address):
-    # Takes website address as an argument and uses requests lib to check if status code is equal to 200
+    """Takes website address as an argument and uses requests
+    lib to check if status code is equal to 200"""
     try:
         r = requests.get(f"{address}")
         if r.status_code == 200:
