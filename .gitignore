@@ -30,6 +30,8 @@
 *.log
 *.sql
 *.sqlite
+*.out
+*.swp
 
 # OS generated files #
 ######################
