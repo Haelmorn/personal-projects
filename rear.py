@@ -1,41 +1,47 @@
-import random
 from itertools import combinations
-from profilestats import profile
 
-with open('rosalind_rear.txt', 'r') as file:
-    temp = file.read().splitlines()
-    temp = [line.split() for line in temp if line != ""]
+def read_and_pair(textfile):
+    '''Reads input text file and returns a touple of 2 element touples'''
+    with open(textfile, 'r') as file:
+        TEMP = file.read().splitlines()
+        TEMP = [line.split() for line in TEMP if line != ""]
+    sets = ((TEMP[0], TEMP[1]), (TEMP[2], TEMP[3]), (TEMP[4], TEMP[5]),
+            (TEMP[6], TEMP[7]), (TEMP[8], TEMP[9]))
+    return sets
 
-
-def rev(li, i1, i2):
-    li[i1:i2+1] = li[i1:i2+1][::-1]
+def rev(li, i_1, i_2):
+    '''Takes a list, 'li', and reverses an interval between i1 and i2'''
+    li[i_1:i_2+1] = li[i_1:i_2+1][::-1]
     return li
 
-@profile(print_stats=20)
-def similarity(li, goal_comb):
-    #similarity = 0
-    #for i in range(len(li)):
-        #if li[i] == goal_comb[i]:
-            #similarity += 1
-    #return similarity
-    return len([i for i, j in zip(li, goal_comb) if i == j])
+
+def how_similar(li, goal_comb):
+    '''Takes a list, 'li', and checks how simillar it is to target list "goal_comb"'''
+    similarity = 0
+    for i in range(len(li)):
+        if li[i] == goal_comb[i]:
+            similarity += 1
+    return similarity
 
 def perms(list2, goal_comb):
-    diki = {}
+    '''Generates a list of all possible lists created by reversing a subset of list "list2"
+        then returns top 25% of all the reversals sorted by how simillar they are to
+        "goal_comb"'''
+    dict_of_reversals_similarity = {}
     for i, j in combinations(range(0, 11), 2):
         target = list2[:]
         current_perm = rev(target, i, j)
-        current_similarity = similarity(current_perm, goal_comb)
-        diki[tuple(current_perm)] = current_similarity
-    maxValue = max(diki.values())
-    maxes = [k for k, v in diki.items() if v >= maxValue*0.5]
+        current_similarity = how_similar(current_perm, goal_comb)
+        dict_of_reversals_similarity[tuple(current_perm)] = current_similarity
+    max_value = max(dict_of_reversals_similarity.values())
+    maxes = [k for k, v in dict_of_reversals_similarity.items() if v >= max_value*0.5]
 
     return [list(i) for i in maxes]
 
 
 def run():
-    sets = ((temp[0], temp[1]), (temp[2], temp[3]), (temp[4], temp[5]), (temp[6], temp[7]), (temp[8], temp[9]))
-    for pair in sets:
+    list_of_pairs = read_and_pair("rosalind_rear.txt")
+    for pair in list_of_pairs:
         if pair[0] == pair[1]:
             print(0)
         else:
