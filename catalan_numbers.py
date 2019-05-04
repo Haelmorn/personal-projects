@@ -1,25 +1,11 @@
-from math import factorial
+s = 'AUAU'
 
-matchings = [("A", "U"), ("U", "A"), ("C", "G"), ("G", "C")]
+c = {'':1, 'A':0, 'C':0, 'G':0, 'U':0, 'AA':0, 'AC':0, 'AG':0, 'AU':1, 'CA':0, 'CC':0, 
+    'CG':1, 'CU':0, 'GA':0, 'GC':1, 'GG':0, 'GU':0, 'UA':1, 'UC':0, 'UG':0, 'UU':0}
 
-def catalan(n):
-    if n == 0:
-        return 1
-    else:
-        return ((2*(2*n + 1))/(n+2)) * catalan(n-1)
+def catalan(s):
+    if s not in c:
+        c[s] = sum([catalan(s[1:k]) * c[s[0]+s[k]] * catalan(s[k+1:]) for k in range(1, len(s))])
+    return c[s]
 
-seq = "AUAUAUAUAUAUAUAUAU"
-suma = 0
-n = len(seq)
-m = []
-for i in range (1, n+1):
-    if (seq[0], seq[i]) in matchings:
-        m.append(i)
-
-
-for k in range(1, (n//2)+1):
-    suma = suma + (catalan(k-1) * catalan(n - k))
-
-
-#TODO: 1. Sprawdzić, gdzie można podzielić RNA na 2
-#TOOD: 2. Policzyć matchingi po podzieleniu
+print(catalan(s) % 10**6)
