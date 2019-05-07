@@ -5,7 +5,7 @@ def read_and_pair(textfile):
     with open(textfile, 'r') as file:
         TEMP = file.read().splitlines()
         TEMP = [line.split() for line in TEMP if line != ""]
-    sets = ((TEMP[0], TEMP[1]), (TEMP[2], TEMP[3]))
+    sets = (TEMP[0], TEMP[1])
     return sets
 
 def rev(li, i_1, i_2):
@@ -39,19 +39,20 @@ def perms(list2, goal_comb):
 
 
 def run():
-    list_of_pairs = read_and_pair("rosalind_sort.txt")
-    for pair in list_of_pairs:
-        if pair[0] == pair[1]:
-            print(0)
-        else:
-            reversals = 1
-            goal = pair[1]
-            permuts = perms(pair[0], goal)
-            while goal not in permuts:
-                permuts = [perms(i, goal) for i in permuts]
-                permuts = sum(permuts, [])
-                permuts = [item for item in permuts if item[0:reversals] == goal[0:reversals] or item[-reversals:] == goal[-reversals:]]
-                reversals += 1
-            print(reversals)
+    pair = read_and_pair("rosalind_sort.txt")
+    if pair[0] == pair[1]:
+        print(0)
+    else:
+        pair[0].append([])
+        reversals = 1
+        goal = pair[1]
+        target = [pair[0],[]]
+        permuts = perms(target[0], goal)
+        while goal not in permuts:
+            permuts = [perms(i, goal) for i in permuts]
+            permuts = sum(permuts, [])
+            permuts = [item for item in permuts if item[0:reversals] == goal[0:reversals] or item[-reversals:] == goal[-reversals:]]
+            reversals += 1
+        print(reversals)
 
 run()
