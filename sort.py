@@ -17,8 +17,8 @@ def rev(li, i_1, i_2):
 def how_similar(li, goal_comb):
     '''Takes a list, 'li', and checks how simillar it is to target list "goal_comb"'''
     similarity = 0
-    for i in range(len(li)):
-        if li[i] == goal_comb[i]:
+    for i in range(len(li[0])):
+        if li[0][i] == goal_comb[i]:
             similarity += 1
     return similarity
 
@@ -46,7 +46,8 @@ def run():
         pair[0].append([])
         reversals = 1
         goal = pair[1]
-        target = [pair[0],[]]
+        target = [[] for x in range(2)]
+        target[0] = pair[0]
         permuts = perms(target[0], goal)
         while goal not in permuts:
             permuts = [perms(i, goal) for i in permuts]
